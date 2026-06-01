@@ -9,7 +9,7 @@ public class GrafoDirigidoAciclico {
         ArrayList<Integer> datosGenerados = new ArrayList<>();
 
         while (grafo.size() < n) {
-            int nuevoDato = rnd.nextInt(n * 5 + 1);
+            int nuevoDato = rnd.nextInt(20);
             if (!datosGenerados.contains(nuevoDato)) {
                 datosGenerados.add(nuevoDato);
                 grafo.add(new Nodo(nuevoDato));
@@ -94,21 +94,28 @@ public class GrafoDirigidoAciclico {
         }
     }
 
-    public boolean conectados(int i, int j) {
-        if (i < 0 || i >= grafo.size() || j < 0 || j >= grafo.size()) {
-            System.out.println("Fuera de rango.");
+    public boolean conectados(int datoOrigen, int datoDestino) {
+        int i = obtenerIndicePorDato(datoOrigen);
+        int j = obtenerIndicePorDato(datoDestino);
+
+        if (i == -1 || j == -1) {
+            System.out.println("Error: Uno o ambos datos no existen en el grafo.");
             return false;
         }
+
         Nodo origen = grafo.get(i);
         Nodo destino = grafo.get(j);
+
         if (origen.getListaDeAdyacenia().contains(destino)) {
             System.out.println("Los nodos SI estan conectados.");
             return true;
         }
+
         ColaSimple<Nodo> cola = new ColaSimple<>(grafo.size());
         Set<Nodo> visitados = new HashSet<>();
         visitados.add(origen);
         cola.insertar(origen);
+
         while (!cola.estaVacio()) {
             Nodo actual = cola.eliminarDato();
             for (Nodo vecino : actual.getListaDeAdyacenia()) {
@@ -122,6 +129,7 @@ public class GrafoDirigidoAciclico {
                 }
             }
         }
+
         System.out.println("Los nodos NO estan conectados.");
         return false;
     }
@@ -157,7 +165,7 @@ public class GrafoDirigidoAciclico {
 
     public void mostrarEstructuraBien() {
         int n = grafo.size();
-        System.out.println("\nMatriz de Adyacencia (Mostrando DATOS de los nodos):");
+        System.out.println("\nMatriz de Adyacencia:");
 
         System.out.print("     ");
         for (int j = 0; j < n; j++) {

@@ -7,7 +7,7 @@ public class Main {
         System.out.println("\n========================================");
         System.out.println("PROYECTO FINAL - GRAFO DIRIGÍDO ACÍCLICO");
         System.out.println("========================================");
-        System.out.println("\n- Ingresa la cantidad de vértices que tendrá el grafo: ");
+        System.out.print("\nIngresa la cantidad de vértices que tendrá el grafo: ");
         int cantVertices = scanner.nextInt();
 
         GrafoDirigidoAciclico grafo = new GrafoDirigidoAciclico(cantVertices);
