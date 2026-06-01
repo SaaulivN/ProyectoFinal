@@ -22,7 +22,7 @@ public class GrafoDirigidoAciclico {
         System.out.println("Arista Agregada.");
         return true;
     }
-    
+
 
     public int gradoDeEntrada(int i){
         int grado =-1;
@@ -151,54 +151,31 @@ public class GrafoDirigidoAciclico {
         }
     }
 
-    public String topologicalSort() {
-        String resultado = "";
-        int n = grafo.size();
 
-        int[] gradosTemp = new int[n];
-        boolean[] visitados = new boolean[n];
-
-        for (int i = 0; i < n; i++) {
-            gradosTemp[i] = grafo.get(i).getGradoEntrada();
-            visitados[i] = false;
-        }
-
-        for (int paso = 0; paso < n; paso++) {
-
-            int indiceElegido = -1;
-            int valorMasPequeno = 999999;
-
-            for (int i = 0; i < n; i++) {
-                if (gradosTemp[i] == 0 && !visitados[i]) {
-                    if (grafo.get(i).getDato() < valorMasPequeno) {
-                        valorMasPequeno = grafo.get(i).getDato();
-                        indiceElegido = i;
-                    }
-                }
-            }
-
-            if (indiceElegido == -1) {
-                return resultado + " (Advertencia: Hay un ciclo, no se pudo terminar)";
-            }
-
-            visitados[indiceElegido] = true;
-            Nodo actual = grafo.get(indiceElegido);
-
-            if (resultado.equals("")) {
-                resultado += actual.getDato();
-            } else {
-                resultado += " - " + actual.getDato();
-            }
-
-            for (Nodo vecino : actual.getListaDeAdyacenia()) {
-                int indiceVecino = grafo.indexOf(vecino);
-                if (indiceVecino != -1) {
-                    gradosTemp[indiceVecino]--;
-                }
+    public String topologicalSort(){
+        Pila<Nodo> pila = new Pila();
+        Set<Nodo> visitados = new HashSet<>();
+        for (Nodo nodo : grafo) {
+            if(!visitados.contains(nodo)){
+                topologicalSortU(nodo, visitados, pila);
             }
         }
-
-        return resultado;
+        StringBuilder sb = new StringBuilder();
+        while (!pila.pilaVacia()) {
+            sb.append(pila.pop().getDato()).append(" ");
+        }
+        return sb.toString().trim();
     }
+
+    private void topologicalSortU(Nodo actual, Set<Nodo> visitados, Pila<Nodo> pila) {
+        visitados.add(actual);
+        for(Nodo nodo : actual.getListaDeAdyacenia()){
+            if(!visitados.contains(nodo)){
+                topologicalSortU(nodo, visitados, pila);
+            }
+        }
+        pila.push(actual);
+    }
+
     //agregados
 }
