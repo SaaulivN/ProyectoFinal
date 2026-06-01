@@ -51,4 +51,5 @@ public class Nodo {
         this.gradoEntrada = gradoEntrada;
     }
 
+    public String toString(){return "" + dato;}
 }
