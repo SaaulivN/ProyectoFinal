@@ -16,9 +16,10 @@ public class GrafoDirigidoAciclico {
         grafo.get(i).agregarAdyacenia(grafo.get(j));
         if(tieneCiclos()){
             grafo.get(i).eliminarAdyacenia(grafo.get(j));
-            System.out.println("Se crea un cilo");
+            System.out.println("No se puede porque se crea un ciclo");
             return false;
         }
+        System.out.println("Arista Agregada.");
         return true;
     }
     
@@ -65,13 +66,15 @@ public class GrafoDirigidoAciclico {
         }
     }
 
-    public boolean conectado(int i, int j){
+    public boolean conectados(int i, int j){
         if(i < 0 || i >= grafo.size() || j < 0 || j >= grafo.size()){
+            System.out.println("Fuera de rango.");
             return false;
         }
         Nodo origen = grafo.get(i);
         Nodo destino = grafo.get(j);
         if(origen.getListaDeAdyacenia().contains(destino)){
+            System.out.println("Los nodos SI estan conectados.");
             return true;
         }
         ColaSimple<Nodo> cola = new ColaSimple<>(grafo.size());
@@ -82,6 +85,7 @@ public class GrafoDirigidoAciclico {
             Nodo actual = cola.eliminarDato();
             for(Nodo vecino : actual.getListaDeAdyacenia()){
                 if(vecino == destino){
+                    System.out.println("Los nodos NO estan conectados.");
                     return true;
                 }
                 if(!visitados.contains(vecino)){
@@ -90,6 +94,7 @@ public class GrafoDirigidoAciclico {
                 }
             }
         }
+        System.out.println("Los nodos NO estan conectados.");
         return false;
 
     }
@@ -123,7 +128,77 @@ public class GrafoDirigidoAciclico {
         return false;
     }
 
-    //Comentario Prueb
-    //Segundo cometario prueba
+    public void mostrarEstructura() {
+        int n = grafo.size();
+        System.out.println("\nMatriz de Adyacencia:");
+
+        System.out.print("    ");
+        for (int j = 0; j < n; j++) {
+            System.out.printf("%2d ", j);
+        }
+        System.out.println("\n    ______________");
+        for (int i = 0; i < n; i++) {
+            System.out.printf("%2d ", i);
+            System.out.printf("|");
+            for (int j = 0; j < n; j++) {
+                if (adyacente(i, j)) {
+                    System.out.print(" 1 ");
+                } else {
+                    System.out.print(" 0 ");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    public String topologicalSort() {
+        String resultado = "";
+        int n = grafo.size();
+
+        int[] gradosTemp = new int[n];
+        boolean[] visitados = new boolean[n];
+
+        for (int i = 0; i < n; i++) {
+            gradosTemp[i] = grafo.get(i).getGradoEntrada();
+            visitados[i] = false;
+        }
+
+        for (int paso = 0; paso < n; paso++) {
+
+            int indiceElegido = -1;
+            int valorMasPequeno = 999999;
+
+            for (int i = 0; i < n; i++) {
+                if (gradosTemp[i] == 0 && !visitados[i]) {
+                    if (grafo.get(i).getDato() < valorMasPequeno) {
+                        valorMasPequeno = grafo.get(i).getDato();
+                        indiceElegido = i;
+                    }
+                }
+            }
+
+            if (indiceElegido == -1) {
+                return resultado + " (Advertencia: Hay un ciclo, no se pudo terminar)";
+            }
+
+            visitados[indiceElegido] = true;
+            Nodo actual = grafo.get(indiceElegido);
+
+            if (resultado.equals("")) {
+                resultado += actual.getDato();
+            } else {
+                resultado += " - " + actual.getDato();
+            }
+
+            for (Nodo vecino : actual.getListaDeAdyacenia()) {
+                int indiceVecino = grafo.indexOf(vecino);
+                if (indiceVecino != -1) {
+                    gradosTemp[indiceVecino]--;
+                }
+            }
+        }
+
+        return resultado;
+    }
 
 }
